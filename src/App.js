@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Typography,
   Box,
@@ -17,6 +17,7 @@ const PageContainer = styled(Box)(() => ({
 }));
 
 function App() {
+  const [totalBalance, setTotalBalance] = useState(0);
   const [isIncome, setIsIncome] = useState(true);
   const [inputValue, setInputValue] = useState("");
   const [allTransactions, setAllTransactions] = useState([]);
@@ -39,6 +40,17 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    setTotalBalance(
+      allTransactions.reduce(
+        (accumulator, currentValue) =>
+          accumulator +
+          (currentValue.isIncome ? +currentValue.amount : -currentValue.amount),
+        0
+      )
+    );
+  }, [allTransactions]);
+
   return (
     <PageContainer>
       <Typography variant="h3">Finance Tracker</Typography>
@@ -48,7 +60,7 @@ function App() {
           margin: "30px 0",
         }}
       >
-        Balance: 4567,00 BGN
+        Balance: {totalBalance.toFixed(2)} BGN
       </Typography>
       <FormControlLabel
         control={
